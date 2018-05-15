@@ -6,10 +6,6 @@ import lombok.Data;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.charset.CharacterCodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,7 +32,7 @@ public class ConstantUTF8Info implements ReadInfo {
         }
     }
 
-    private String readUTF8(byte[] bytes) throws CharacterCodingException {
+    private String readUTF8(byte[] bytes) {
         StringBuffer sb = new StringBuffer();
         int current = 0;
         int length = bytes.length;
