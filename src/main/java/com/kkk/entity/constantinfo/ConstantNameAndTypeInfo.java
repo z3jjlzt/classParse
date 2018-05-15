@@ -1,5 +1,6 @@
 package com.kkk.entity.constantinfo;
 
+import com.kkk.ReadInfo;
 import com.kkk.entity.U2;
 
 import java.io.InputStream;
@@ -8,20 +9,20 @@ import java.io.InputStream;
  * ${DESCRIPTION}
  * Created by z3jjlzt on 2018/5/14.
  */
-public class ConstantMethodRef extends ConstantInfo{
+public class ConstantNameAndTypeInfo implements ReadInfo {
     /**
      * 指向一个utf8的索引.表示该类名称
      */
-    private int classindex;
+    private int nameindex;
     /**
      * 名称和描述符
      */
-    private int nameandtypeindex;
+    private int descriptorindex;
 
     @Override
     public void read(InputStream ins) {
-        classindex = U2.read(ins);
-        nameandtypeindex = U2.read(ins);
-        System.out.println(" =methodref    #" + classindex +",#" + nameandtypeindex);
+        nameindex = U2.read(ins);
+        descriptorindex = U2.read(ins);
+        System.out.println(" =nameandtype    #" + nameindex +",#" + descriptorindex);
     }
 }

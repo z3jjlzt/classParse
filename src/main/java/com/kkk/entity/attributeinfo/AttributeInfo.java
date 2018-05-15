@@ -3,7 +3,7 @@ package com.kkk.entity.attributeinfo;
 import com.kkk.entity.U2;
 import com.kkk.entity.U4;
 import com.kkk.entity.constantinfo.ConstantPool;
-import com.kkk.entity.constantinfo.ConstantUTF8;
+import com.kkk.entity.constantinfo.ConstantUTF8Info;
 import lombok.Data;
 
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class AttributeInfo {
 
     public void read(InputStream inputStream, ConstantPool constantPool) {
         attr_name_index = U2.read(inputStream);
-        attr_name = ((ConstantUTF8) constantPool.getConstantInfos()[attr_name_index - 1]).getValue();
+        attr_name = ((ConstantUTF8Info) constantPool.getConstantBaseInfos()[attr_name_index - 1]).getValue();
         attrs_length = U4.read(inputStream);
         bytes = new byte[((int) attrs_length)];
         try {

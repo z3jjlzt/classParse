@@ -1,5 +1,6 @@
 package com.kkk.entity.constantinfo;
 
+import com.kkk.ReadInfo;
 import com.kkk.entity.U4;
 
 import java.io.InputStream;
@@ -8,7 +9,7 @@ import java.io.InputStream;
  * ${DESCRIPTION}
  * Created by z3jjlzt on 2018/5/14.
  */
-public class ConstantFloat extends ConstantInfo{
+public class ConstantFloatInfo implements ReadInfo {
     private long bytes;
 
     @Override

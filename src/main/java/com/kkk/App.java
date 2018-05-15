@@ -4,9 +4,8 @@ import com.kkk.entity.attributeinfo.AttributeInfo;
 import com.kkk.entity.constantinfo.ConstantPool;
 import com.kkk.entity.U2;
 import com.kkk.entity.U4;
-import com.kkk.entity.constantinfo.ConstantClass;
-import com.kkk.entity.constantinfo.ConstantInfo;
-import com.kkk.entity.constantinfo.ConstantUTF8;
+import com.kkk.entity.constantinfo.ConstantClassInfo;
+import com.kkk.entity.constantinfo.ConstantUTF8Info;
 import com.kkk.entity.fieldinfo.FieldInfo;
 import com.kkk.entity.methodinfo.MethodInfo;
 
@@ -96,10 +95,10 @@ public class App implements Serializable{
      * @return
      */
     public static String getNameByIndex(ConstantPool constantPool,int index) {
-        ConstantInfo constantInfo = constantPool.getConstantInfos()[index - 1];
+        ReadInfo constantBaseInfo = constantPool.getConstantBaseInfos()[index - 1];
         String reslut = null;
-        if (constantInfo instanceof ConstantClass) {
-            ConstantUTF8 value = ((ConstantUTF8) constantPool.getConstantInfos()[((ConstantClass) constantInfo).getNameindex() - 1]);
+        if (constantBaseInfo instanceof ConstantClassInfo) {
+            ConstantUTF8Info value = ((ConstantUTF8Info) constantPool.getConstantBaseInfos()[((ConstantClassInfo) constantBaseInfo).getNameindex() - 1]);
             reslut = value.getValue();
         }
 

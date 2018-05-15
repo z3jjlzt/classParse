@@ -1,8 +1,6 @@
 package com.kkk.entity.constantinfo;
 
-import com.kkk.entity.constantinfo.ConstantDouble;
-import com.kkk.entity.constantinfo.ConstantInfo;
-import com.kkk.entity.constantinfo.ConstantLong;
+import com.kkk.ReadInfo;
 import lombok.Data;
 
 import java.io.InputStream;
@@ -20,18 +18,18 @@ public class ConstantPool {
     /**
      * cp_count个常量
      */
-    private ConstantInfo[] constantInfos;
+    private ReadInfo[] constantBaseInfos;
 
     public ConstantPool(int constant_pool_count) {
         this.constant_pool_count = constant_pool_count;
-        constantInfos = new ConstantInfo[constant_pool_count];
+        constantBaseInfos = new ReadInfo[constant_pool_count];
     }
 
     public void read(InputStream ins) {
         for (int i = 0; i < constant_pool_count; i++) {
             System.out.printf("#" + (i + 1));
-            constantInfos[i] = ConstantInfo.getConstantInfoByTag(ins);
-            if (constantInfos[i] instanceof ConstantDouble || constantInfos[i] instanceof ConstantLong) {
+            constantBaseInfos[i] = Constant.getCPInfoByTag(ins);
+            if (constantBaseInfos[i] instanceof ConstantDoubleInfo || constantBaseInfos[i] instanceof ConstantLongInfo) {
                 i++;
             }
         }

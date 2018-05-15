@@ -1,5 +1,6 @@
 package com.kkk.entity.constantinfo;
 
+import com.kkk.ReadInfo;
 import com.kkk.entity.U4;
 
 import java.io.InputStream;
@@ -8,7 +9,7 @@ import java.io.InputStream;
  * ${DESCRIPTION}
  * Created by z3jjlzt on 2018/5/14.
  */
-public class ConstantDouble extends ConstantInfo{
+public class ConstantLongInfo implements ReadInfo {
     private long low_bytes;
     private long high_bytes;
 
@@ -16,6 +17,6 @@ public class ConstantDouble extends ConstantInfo{
     public void read(InputStream ins) {
         high_bytes = U4.read(ins);
         low_bytes = U4.read(ins);
-        System.out.println(" =double    " + ((high_bytes << 32) + low_bytes));
+        System.out.println(" =long    " + ((high_bytes << 32) + low_bytes));
     }
 }

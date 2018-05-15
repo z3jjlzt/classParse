@@ -1,5 +1,6 @@
 package com.kkk.entity.constantinfo;
 
+import com.kkk.ReadInfo;
 import com.kkk.entity.U2;
 import lombok.Data;
 
@@ -17,7 +18,7 @@ import java.util.regex.Pattern;
  * Created by z3jjlzt on 2018/5/14.
  */
 @Data
-public class ConstantUTF8 extends ConstantInfo {
+public class ConstantUTF8Info implements ReadInfo {
     private int length;
     private byte[] bytes;
 

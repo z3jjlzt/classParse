@@ -4,7 +4,7 @@ import com.kkk.entity.Instruction;
 import com.kkk.entity.U2;
 import com.kkk.entity.U4;
 import com.kkk.entity.constantinfo.ConstantPool;
-import com.kkk.entity.constantinfo.ConstantUTF8;
+import com.kkk.entity.constantinfo.ConstantUTF8Info;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +27,7 @@ public class AttrCodeInfo extends AttributeInfo {
     @Override
     public void read(InputStream inputStream, ConstantPool constantPool) {
         attr_name_index = U2.read(inputStream);
-        attr_name = ((ConstantUTF8) constantPool.getConstantInfos()[attr_name_index - 1]).getValue();
+        attr_name = ((ConstantUTF8Info) constantPool.getConstantBaseInfos()[attr_name_index - 1]).getValue();
         attrs_length = U4.read(inputStream);
         if ("Code".equals(attr_name)) {
             max_stack = U2.read(inputStream);

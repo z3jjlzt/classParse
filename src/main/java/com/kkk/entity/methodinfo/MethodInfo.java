@@ -4,7 +4,7 @@ import com.kkk.entity.U2;
 import com.kkk.entity.attributeinfo.AttrCodeInfo;
 import com.kkk.entity.attributeinfo.AttributeInfo;
 import com.kkk.entity.constantinfo.ConstantPool;
-import com.kkk.entity.constantinfo.ConstantUTF8;
+import com.kkk.entity.constantinfo.ConstantUTF8Info;
 import lombok.Data;
 
 import java.io.InputStream;
@@ -26,8 +26,8 @@ public class MethodInfo {
         access_flags = U2.read(inputStream);
         name_index = U2.read(inputStream);
         descriptor_index = U2.read(inputStream);
-        name = ((ConstantUTF8) constantPool.getConstantInfos()[name_index - 1]).getValue();
-        descriptor = ((ConstantUTF8) constantPool.getConstantInfos()[descriptor_index - 1]).getValue();
+        name = ((ConstantUTF8Info) constantPool.getConstantBaseInfos()[name_index - 1]).getValue();
+        descriptor = ((ConstantUTF8Info) constantPool.getConstantBaseInfos()[descriptor_index - 1]).getValue();
 
         //读取方法属性信息
         attributes_count = U2.read(inputStream);
