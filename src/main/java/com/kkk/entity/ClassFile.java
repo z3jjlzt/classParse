@@ -11,6 +11,7 @@ import lombok.Data;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.function.Function;
 
 /**
  * classfile文件格式
@@ -36,109 +37,50 @@ class ClassFile {
 
     @SuppressWarnings("WeakerAccess")
     public void init(InputStream inputStream) {
-        setMagic(Long.toHexString(U4.read(inputStream)));
-        setMinor_version(U2.read(inputStream));
-        setMajor_version(U2.read(inputStream));
+        //标识和版本信息
+        initTagAndVersion(inputStream);
 
         //常量池信息
-        setConstant_pool_count(U2.read(inputStream));
-        constantinfos = new ReadInfo[constant_pool_count];
-        for (int i = 1; i < constant_pool_count; i++) {
-            constantinfos[i] = Constant.getCPInfoByTag(inputStream);
-            if (constantinfos[i] instanceof ConstantDoubleInfo || constantinfos[i] instanceof ConstantLongInfo) {
-                i++;
-            }
-        }
-        for (int i = 1; i < constant_pool_count; i++) {
-            String simpleName = constantinfos[i].getClass().getSimpleName();
-            int index1,index2;
-            switch (simpleName) {
-                case "ConstantClassInfo":
-                    index1 = ((ConstantClassInfo) constantinfos[i]).getNameindex();
-                    ((ConstantClassInfo) constantinfos[i]).setName(Utf8ToString(index1));
-                    break;
-                case "ConstantMethodRefInfo":
-                    index1 = ((ConstantMethodRefInfo) constantinfos[i]).getClassindex();
-                    ((ConstantMethodRefInfo) constantinfos[i]).setClassname(ClassToString(index1));
-                    index2 = ((ConstantMethodRefInfo) constantinfos[i]).getNameandtypeindex();
-                    ((ConstantMethodRefInfo) constantinfos[i]).setNameandtype(NameAndTypeToString(index2));
-                    break;
-                case "ConstantFieldRefInfo":
-                     index1 = ((ConstantFieldRefInfo) constantinfos[i]).getClassindex();
-                    ((ConstantFieldRefInfo) constantinfos[i]).setClassname(ClassToString(index1));
-                     index2 = ((ConstantFieldRefInfo) constantinfos[i]).getNameandtypeindex();
-                    ((ConstantFieldRefInfo) constantinfos[i]).setNameandtype(NameAndTypeToString(index2));
-                    break;
-                case "ConstantStringInfo":
-                    index1 = ((ConstantStringInfo) constantinfos[i]).getStringindex();
-                    ((ConstantStringInfo) constantinfos[i]).setValue(Utf8ToString(index1));
-                    break;
-                case "ConstantNameAndTypeInfo":
-                    index1 = ((ConstantNameAndTypeInfo) constantinfos[i]).getNameindex();
-                    ((ConstantNameAndTypeInfo) constantinfos[i]).setName(Utf8ToString(index1));
-                    index2 = ((ConstantNameAndTypeInfo) constantinfos[i]).getDescriptorindex();
-                    ((ConstantNameAndTypeInfo) constantinfos[i]).setDescriptor(Utf8ToString(index2));
-                    break;
-                case "ConstantMethodTypeInfo":
-                    index1 = ((ConstantMethodTypeInfo) constantinfos[i]).getDescriptorindex();
-                    ((ConstantMethodTypeInfo) constantinfos[i]).setDescriptor(Utf8ToString(index1));
-                    break;
-                case "ConstantInterfaceMethodRefInfo":
-                    index1 = ((ConstantInterfaceMethodRefInfo) constantinfos[i]).getClassindex();
-                    ((ConstantInterfaceMethodRefInfo) constantinfos[i]).setClassname(ClassToString(index1));
-                    index2 = ((ConstantInterfaceMethodRefInfo) constantinfos[i]).getNameandtypeindex();
-                    ((ConstantInterfaceMethodRefInfo) constantinfos[i]).setNameandtype(NameAndTypeToString(index2));
-                    break;
-                default:
-                    break;
-            }
-            if (constantinfos[i] instanceof ConstantDoubleInfo || constantinfos[i] instanceof ConstantLongInfo) {
-                i++;
-            }
-        }
+        initConstantPool(inputStream);
 
         //确定继承关系
-        setAccess_flags(Integer.toBinaryString(U2.read(inputStream)));
-        setThis_class(U2.read(inputStream));
-        setSuper_class(U2.read(inputStream));
-        setInterfaces_count(U2.read(inputStream));
-        interfaceinfos = new InterfaceInfo[interfaces_count];
-        for (int i = 0; i < interfaces_count; i++) {
-            InterfaceInfo info = new InterfaceInfo();
-            info.read(inputStream);
-            int class_info_index = ((ConstantClassInfo) constantinfos[info.getName_index()]).getNameindex();
-            info.setName(Utf8ToString(class_info_index));
-            interfaceinfos[i] = info;
-        }
+        initInheritance(inputStream);
 
         //字段信息
-        setFields_count(U2.read(inputStream));
-        fieldinfos = new ReadInfo[fields_count];
-        for (int i = 0; i < fields_count; i++) {
-            ReadInfo fieldinfo = new FieldInfo();
-            fieldinfo.read(inputStream);
-            ((FieldInfo) fieldinfo).setName(Utf8ToString(((FieldInfo) fieldinfo).getName_index()));
-            ((FieldInfo) fieldinfo).setDescriptor(Utf8ToString(((FieldInfo) fieldinfo).getDescriptor_index()));
-            for (AttributeBaseInfo attributeInfo : ((FieldInfo) fieldinfo).getAttributeInfos()) {
-                attributeInfo.setAttr_name(Utf8ToString(attributeInfo.getAttr_name_index()));
-            }
-            fieldinfos[i] = fieldinfo;
-        }
+        initFieldInfo(inputStream);
 
         //方法信息
+        initMethodInfo(inputStream);
+
+        //属性信息
+        initAttrInfo(inputStream);
+    }
+
+    private void initAttrInfo(InputStream inputStream) {
+        setAttrs_count(U2.read(inputStream));
+        attrinfos = new ReadInfo[attrs_count];
+        for (int i = 0; i < attrs_count; i++) {
+            ReadInfo attr = new AttributeBaseInfo();
+            attr.read(inputStream);
+            ((AttributeBaseInfo) attr).setAttr_name(utf8ToString(((AttributeBaseInfo) attr).getAttr_name_index()));
+            attrinfos[i] = attr;
+        }
+    }
+
+    private void initMethodInfo(InputStream inputStream) {
         setMethods_count(U2.read(inputStream));
         methodinfos = new ReadInfo[methods_count];
         for (int i = 0; i < methods_count; i++) {
             ReadInfo methodinfo = new MethodInfo();
             methodinfo.read(inputStream);
-            ((MethodInfo) methodinfo).setName(Utf8ToString(((MethodInfo) methodinfo).getName_index()));
-            ((MethodInfo) methodinfo).setDescriptor(Utf8ToString(((MethodInfo) methodinfo).getDescriptor_index()));
+            ((MethodInfo) methodinfo).setName(utf8ToString(((MethodInfo) methodinfo).getName_index()));
+            ((MethodInfo) methodinfo).setDescriptor(utf8ToString(((MethodInfo) methodinfo).getDescriptor_index()));
 
             //2次解析的方法属性集合
             AttributeBaseInfo[] infos = new AttributeBaseInfo[((MethodInfo) methodinfo).getAttributeInfos().length];
             for (int j = 0; j < ((MethodInfo) methodinfo).getAttributeInfos().length; j++) {
                 AttributeBaseInfo attributeBaseInfo = ((MethodInfo) methodinfo).getAttributeInfos()[j];
-                attributeBaseInfo.setAttr_name(Utf8ToString(attributeBaseInfo.getAttr_name_index()));
+                attributeBaseInfo.setAttr_name(utf8ToString(attributeBaseInfo.getAttr_name_index()));
                 switch (attributeBaseInfo.getAttr_name()) {
                     case "Code":
                         AttrCodeInfo attrCodeInfo = new AttrCodeInfo();
@@ -156,20 +98,102 @@ class ClassFile {
             ((MethodInfo) methodinfo).setAttributeInfos(infos);
             methodinfos[i] = methodinfo;
         }
+    }
 
-        //属性信息
-        setAttrs_count(U2.read(inputStream));
-        attrinfos = new ReadInfo[attrs_count];
-        for (int i = 0; i < attrs_count; i++) {
-            ReadInfo attr = new AttributeBaseInfo();
-            attr.read(inputStream);
-            ((AttributeBaseInfo) attr).setAttr_name(Utf8ToString(((AttributeBaseInfo) attr).getAttr_name_index()));
-            attrinfos[i] = attr;
+    private void initFieldInfo(InputStream inputStream) {
+        setFields_count(U2.read(inputStream));
+        fieldinfos = new ReadInfo[fields_count];
+        for (int i = 0; i < fields_count; i++) {
+            ReadInfo fieldinfo = new FieldInfo();
+            fieldinfo.read(inputStream);
+            ((FieldInfo) fieldinfo).setName(utf8ToString(((FieldInfo) fieldinfo).getName_index()));
+            ((FieldInfo) fieldinfo).setDescriptor(utf8ToString(((FieldInfo) fieldinfo).getDescriptor_index()));
+            for (AttributeBaseInfo attributeInfo : ((FieldInfo) fieldinfo).getAttributeInfos()) {
+                attributeInfo.setAttr_name(utf8ToString(attributeInfo.getAttr_name_index()));
+            }
+            fieldinfos[i] = fieldinfo;
         }
+    }
+
+    private void initInheritance(InputStream inputStream) {
+        setAccess_flags(Integer.toBinaryString(U2.read(inputStream)));
+        setThis_class(U2.read(inputStream));
+        setSuper_class(U2.read(inputStream));
+        setInterfaces_count(U2.read(inputStream));
+        interfaceinfos = new InterfaceInfo[interfaces_count];
+        for (int i = 0; i < interfaces_count; i++) {
+            InterfaceInfo info = new InterfaceInfo();
+            info.read(inputStream);
+            int class_info_index = ((ConstantClassInfo) constantinfos[info.getName_index()]).getNameindex();
+            info.setName(utf8ToString(class_info_index));
+            interfaceinfos[i] = info;
+        }
+    }
+
+    private void initConstantPool(InputStream inputStream) {
+        setConstant_pool_count(U2.read(inputStream));
+        constantinfos = new ReadInfo[constant_pool_count];
+        for (int i = 1; i < constant_pool_count; i++) {
+            constantinfos[i] = Constant.getCPInfoByTag(inputStream);
+            if (constantinfos[i] instanceof ConstantDoubleInfo || constantinfos[i] instanceof ConstantLongInfo) {
+                i++;
+            }
+        }
+        for (int i = 1; i < constant_pool_count; i++) {
+            String simpleName = constantinfos[i].getClass().getSimpleName();
+            switch (simpleName) {
+                case "ConstantClassInfo":
+                    ConstantClassInfo classInfo = (ConstantClassInfo) constantinfos[i];
+                    classInfo.setName(utf8ToString(classInfo.getNameindex()));
+                    break;
+                case "ConstantMethodRefInfo":
+                    ConstantMethodRefInfo methodRef = (ConstantMethodRefInfo) constantinfos[i];
+                    methodRef.setClassname(class2String(methodRef.getClassindex()));
+                    methodRef.setNameandtype(nameAndType2String(methodRef.getNameandtypeindex()));
+
+                    break;
+                case "ConstantFieldRefInfo":
+                    ConstantFieldRefInfo fieldRef = (ConstantFieldRefInfo) constantinfos[i];
+                    fieldRef.setClassname(class2String(fieldRef.getClassindex()));
+                    fieldRef.setNameandtype(nameAndType2String(fieldRef.getNameandtypeindex()));
+
+                    break;
+                case "ConstantStringInfo":
+                    ConstantStringInfo string = (ConstantStringInfo) constantinfos[i];
+                    string.setValue(utf8ToString(string.getStringindex()));
+                    break;
+                case "ConstantNameAndTypeInfo":
+                    ConstantNameAndTypeInfo nameAndType = (ConstantNameAndTypeInfo) constantinfos[i];
+                    nameAndType.setName(utf8ToString(nameAndType.getNameindex()));
+                    nameAndType.setDescriptor(utf8ToString(nameAndType.getDescriptorindex()));
+                    break;
+                case "ConstantMethodTypeInfo":
+                    ConstantMethodTypeInfo methodType = (ConstantMethodTypeInfo) constantinfos[i];
+                    methodType.setDescriptor(utf8ToString(methodType.getDescriptorindex()));
+                    break;
+                case "ConstantInterfaceMethodRefInfo":
+                    ConstantInterfaceMethodRefInfo interfaceMethodRef = (ConstantInterfaceMethodRefInfo) constantinfos[i];
+                    interfaceMethodRef.setClassname(class2String(interfaceMethodRef.getClassindex()));
+                    interfaceMethodRef.setNameandtype(nameAndType2String(interfaceMethodRef.getNameandtypeindex()));
+                    break;
+                default:
+                    break;
+            }
+            if (constantinfos[i] instanceof ConstantDoubleInfo || constantinfos[i] instanceof ConstantLongInfo) {
+                i++;
+            }
+        }
+    }
+
+    private void initTagAndVersion(InputStream inputStream) {
+        setMagic(Long.toHexString(U4.read(inputStream)));
+        setMinor_version(U2.read(inputStream));
+        setMajor_version(U2.read(inputStream));
     }
 
     /**
      * utf8表转string
+     *
      * @param index 常量池对应的下标
      * @return 对应的string值
      */
@@ -179,23 +203,89 @@ class ClassFile {
 
     /**
      * class表转string
+     *
      * @param index 常量池对应的下标
      * @return 对应的string值
      */
     private String ClassToString(int index) {
         int nameindex = ((ConstantClassInfo) constantinfos[index]).getNameindex();
-        return Utf8ToString(nameindex);
+        return utf8ToString(nameindex);
     }
 
     /**
      * nameandtype表转string
+     *
      * @param index 常量池对应的下标
      * @return 对应的string值
      */
     private String NameAndTypeToString(int index) {
         int descriptorindex = ((ConstantNameAndTypeInfo) constantinfos[index]).getDescriptorindex();
         int nameindex = ((ConstantNameAndTypeInfo) constantinfos[index]).getNameindex();
-        return Utf8ToString(descriptorindex) + Utf8ToString(nameindex);
+        return utf8ToString(descriptorindex) + utf8ToString(nameindex);
+    }
+
+    /**
+     * 将t转换为结果R
+     *
+     * @param t        原始数据
+     * @param function 转换函数
+     * @param <T>      原始数据类型
+     * @param <R>      返回数据类型
+     * @return 转换后的数据
+     */
+    private static <T, R> R map(T t, Function<T, R> function) {
+        return function.apply(t);
+    }
+
+    /**
+     * 将t两次转换为结果R
+     *
+     * @param t   原始数据
+     * @param f1  转换函数1
+     * @param f2  转换函数2
+     * @param <T> 原始数据类型
+     * @param <Q> 中间数据类型
+     * @param <R> 返回数据类型
+     * @return 转换后的数据
+     */
+    private static <T, Q, R> R doubleMap(T t, Function<T, Q> f1, Function<Q, R> f2) {
+        return f1.andThen(f2).apply(t);
+    }
+
+    /**
+     * 获取名称和类型的string
+     *
+     * @param index 下标
+     * @return 对应的string字符串
+     */
+    private String nameAndType2String(int index) {
+        return doubleMap(index,
+                x -> ((ConstantNameAndTypeInfo) constantinfos[x]),
+                x -> ((ConstantUTF8Info) constantinfos[x.getNameindex()]).getValue() +
+                        ((ConstantUTF8Info) constantinfos[x.getDescriptorindex()]).getValue());
+    }
+
+    /**
+     * 获取class表的string
+     *
+     * @param index 下标
+     * @return 对应的string字符串
+     */
+    private String class2String(int index) {
+        return doubleMap(index,
+                x -> ((ConstantClassInfo) constantinfos[x]).getNameindex(),
+                x -> ((ConstantUTF8Info) constantinfos[x]).getValue());
+    }
+
+    /**
+     * 获取utf8表的string
+     *
+     * @param index 下标
+     * @return 对应的string字符串
+     */
+    private String utf8ToString(int index) {
+        return map(index,
+                x -> ((ConstantUTF8Info) constantinfos[x]).getValue());
     }
 
     public static void main(String[] args) throws IOException {
@@ -208,6 +298,7 @@ class ClassFile {
 
     /**
      * 输出解析的class文件内容
+     *
      * @param classFile classfile文件
      */
     private static void printClassFile(ClassFile classFile) {
