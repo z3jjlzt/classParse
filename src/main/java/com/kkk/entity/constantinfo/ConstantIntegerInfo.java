@@ -6,7 +6,7 @@ import com.kkk.entity.U4;
 import java.io.InputStream;
 
 /**
- * ${DESCRIPTION}
+ * int类型常量
  * Created by z3jjlzt on 2018/5/14.
  */
 public class ConstantIntegerInfo implements ReadInfo {
@@ -15,6 +15,10 @@ public class ConstantIntegerInfo implements ReadInfo {
     @Override
     public void read(InputStream ins) {
         bytes = U4.read(ins);
-        System.out.println(" =integer    " + bytes);
+    }
+
+    @Override
+    public String toString() {
+        return "  =integer    " + bytes;
     }
 }

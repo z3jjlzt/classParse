@@ -2,13 +2,14 @@ package com.kkk.entity;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 
 /**
  * 对应4个字节，使用long表示
  * Created by z3jjlzt on 2018/4/26.
  */
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class U4 {
+    @SuppressWarnings("ForLoopReplaceableByForEach")
     public static long read(InputStream ins) {
         byte[] bytes = new byte[4];
         try {

@@ -13,29 +13,29 @@ public class Constant {
     /**
      * 常量池tag分类
      */
-    public static final int CONSTANT_UTF8 = 1;
-    public static final int CONSTANT_INTEGER = 3;
-    public static final int CONSTANT_FLOAT = 4;
-    public static final int CONSTANT_LONG = 5;
-    public static final int CONSTANT_DOUBLE = 6;
-    public static final int CONSTANT_CLASS = 7;
-    public static final int CONSTANT_STRING = 8;
-    public static final int CONSTANT_FIELDREF = 9;
-    public static final int CONSTANT_METHODREF = 10;
-    public static final int CONSTANT_INTERFACEMETHODREF = 11;
-    public static final int CONSTANT_NAMEANDTYPE = 12;
-    public static final int CONSTANT_METHODHANDLE = 15;
-    public static final int CONSTANT_METHODTYPE = 16;
-    public static final int CONSTANT_INVOKEDYNAMIC = 18;
+    private static final int CONSTANT_UTF8 = 1;
+    private static final int CONSTANT_INTEGER = 3;
+    private static final int CONSTANT_FLOAT = 4;
+    private static final int CONSTANT_LONG = 5;
+    private static final int CONSTANT_DOUBLE = 6;
+    private static final int CONSTANT_CLASS = 7;
+    private static final int CONSTANT_STRING = 8;
+    private static final int CONSTANT_FIELDREF = 9;
+    private static final int CONSTANT_METHODREF = 10;
+    private static final int CONSTANT_INTERFACEMETHODREF = 11;
+    private static final int CONSTANT_NAMEANDTYPE = 12;
+    private static final int CONSTANT_METHODHANDLE = 15;
+    private static final int CONSTANT_METHODTYPE = 16;
+    private static final int CONSTANT_INVOKEDYNAMIC = 18;
 
     /**
      * 通过tag得到常量池对应表信息
-     * @param ins
-     * @return
+     * @param ins 数据流
+     * @return 返回对应的表信息
      */
     public static ReadInfo getCPInfoByTag(InputStream ins) {
         int tag = U1.read(ins);
-        ReadInfo result = null;
+        ReadInfo result;
         switch (tag) {
             case CONSTANT_UTF8: result = new ConstantUTF8Info();break;
             case CONSTANT_INTEGER: result = new ConstantIntegerInfo();break;

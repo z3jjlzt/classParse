@@ -2,8 +2,7 @@ package com.kkk.entity.methodinfo;
 
 import com.kkk.ReadInfo;
 import com.kkk.entity.U2;
-import com.kkk.entity.attributeinfo.AttrCodeInfo;
-import com.kkk.entity.attributeinfo.AttributeInfo;
+import com.kkk.entity.attributeinfo.AttributeBaseInfo;
 import lombok.Data;
 
 import java.io.InputStream;
@@ -18,20 +17,20 @@ public class MethodInfo implements ReadInfo {
     private int name_index;
     private int descriptor_index;
     private int attributes_count;
-    private String name,descriptor;
-    private AttributeInfo[] attributeInfos;
+    private String name, descriptor;
+    private AttributeBaseInfo[] attributeInfos;
 
     @Override
     public void read(InputStream inputStream) {
-         access_flags = U2.read(inputStream);
+        access_flags = U2.read(inputStream);
         name_index = U2.read(inputStream);
         descriptor_index = U2.read(inputStream);
 
         //读取方法属性信息
         attributes_count = U2.read(inputStream);
-        attributeInfos = new AttributeInfo[attributes_count];
+        attributeInfos = new AttributeBaseInfo[attributes_count];
         for (int i = 0; i < attributes_count; i++) {
-            AttrCodeInfo attributeInfo = new AttrCodeInfo();
+            AttributeBaseInfo attributeInfo = new AttributeBaseInfo();
             attributeInfo.read(inputStream);
             attributeInfos[i] = attributeInfo;
         }

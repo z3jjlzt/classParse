@@ -1,14 +1,80 @@
 package com.kkk.entity;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * jvm指令集映射关系
  * Created by z3jjlzt on 2018/5/15.
  */
+@SuppressWarnings("ALL")
 public class Instruction {
-    public static Map INSTRUCTION_SET = new HashMap();
+    public static final Map<Object,String> INSTRUCTION_SET = new HashMap();
+    public static final Set<String> SET1 = new HashSet<>();
+    public static final Set<String> SET2 = new HashSet<>();
+
+    static {
+        SET1.add("ldc");//index
+        SET1.add("iload");//index
+        SET1.add("lload");//index
+        SET1.add("fload");//index
+        SET1.add("dload");//index
+        SET1.add("aload");//index
+        SET1.add("istore");//index
+        SET1.add("lstore");//index
+        SET1.add("fstore");//index
+        SET1.add("dstore");//index
+        SET1.add("aastore");//index
+        SET1.add("ret");//index
+        SET1.add("bipush");//byte
+    }
+
+    static {
+        SET2.add("sipush");//byte1 byte2
+        SET2.add("ldc_w");//index1 index2
+        SET2.add("ldc2_w");//index1 index2
+        SET2.add("iinc");//index const
+        SET2.add("ifeq");//index1 index2
+        SET2.add("ifne");//index1 index2
+        SET2.add("iflt");//index1 index2
+        SET2.add("ifge");//index1 index2
+        SET2.add("ifgt");//index1 index2
+        SET2.add("ifle");//index1 index2
+        SET2.add("if_icmpeq");//index1 index2
+        SET2.add("if_icmpne");//index1 index2
+        SET2.add("if_icmplt");//index1 index2
+        SET2.add("if_icmpge");//index1 index2
+        SET2.add("if_icmpgt");//index1 index2
+        SET2.add("if_icmple");//index1 index2
+        SET2.add("if_acmpeq");//index1 index2
+        SET2.add("if_acmpne");//index1 index2
+        SET2.add("goto");//index1 index2
+        SET2.add("jsr");//index1 index2
+        SET2.add("tableswitch");//变长
+        SET2.add("lookupswitch");//变长
+        SET2.add("getstatic");//indexi index2
+        SET2.add("putstatic");//index1 index2
+        SET2.add("getfield");//index1 index2
+        SET2.add("putfield");//index1 index2
+        SET2.add("invokevirtual");//index1 index2
+        SET2.add("invokespecial");//index1 index2
+        SET2.add("invokestatic");//index1 index2
+        SET2.add("invokeinterface");//index1 index2 count 0
+        SET2.add("invokedynamic");//index1 index2 0 0
+        SET2.add("new");//index1 index2
+        SET2.add("newarray");//atype(int)
+        SET2.add("anewarray");//index1 index2
+        SET2.add("checkcast");//index1 index2
+        SET2.add("instanceof");//index1 index2
+        SET2.add("wide");//如果接下来操作符为iinc i1 i2 i3 i4 否则index1 index2
+        SET2.add("multianewarray");//b1 b2 dimension
+        SET2.add("ifnull");//index1 index2
+        SET2.add("ifnonnull");//index1 index2
+        SET2.add("goto_w");//index1 index2 index3 index4
+        SET2.add("jsr_w");//index1 index2 index3 index4
+    }
 
     static {
         INSTRUCTION_SET.put(Integer.parseInt("0x00".substring(2, 4), 16), "nop");
@@ -27,16 +93,16 @@ public class Instruction {
         INSTRUCTION_SET.put(Integer.parseInt("0x0d".substring(2, 4), 16), "fconst_2");
         INSTRUCTION_SET.put(Integer.parseInt("0x0e".substring(2, 4), 16), "dconst_0");
         INSTRUCTION_SET.put(Integer.parseInt("0x0f".substring(2, 4), 16), "dconst_1");
-        INSTRUCTION_SET.put(Integer.parseInt("0x10".substring(2, 4), 16), "bipush");
-        INSTRUCTION_SET.put(Integer.parseInt("0x11".substring(2, 4), 16), "sipush");
-        INSTRUCTION_SET.put(Integer.parseInt("0x12".substring(2, 4), 16), "ldc");
-        INSTRUCTION_SET.put(Integer.parseInt("0x13".substring(2, 4), 16), "ldc_w");
-        INSTRUCTION_SET.put(Integer.parseInt("0x14".substring(2, 4), 16), "ldc2_w");
-        INSTRUCTION_SET.put(Integer.parseInt("0x15".substring(2, 4), 16), "iload");
-        INSTRUCTION_SET.put(Integer.parseInt("0x16".substring(2, 4), 16), "lload");
-        INSTRUCTION_SET.put(Integer.parseInt("0x17".substring(2, 4), 16), "fload");
-        INSTRUCTION_SET.put(Integer.parseInt("0x18".substring(2, 4), 16), "dload");
-        INSTRUCTION_SET.put(Integer.parseInt("0x19".substring(2, 4), 16), "aload");
+        INSTRUCTION_SET.put(Integer.parseInt("0x10".substring(2, 4), 16), "bipush");//byte
+        INSTRUCTION_SET.put(Integer.parseInt("0x11".substring(2, 4), 16), "sipush");//byte1 byte2
+        INSTRUCTION_SET.put(Integer.parseInt("0x12".substring(2, 4), 16), "ldc");//index
+        INSTRUCTION_SET.put(Integer.parseInt("0x13".substring(2, 4), 16), "ldc_w");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0x14".substring(2, 4), 16), "ldc2_w");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0x15".substring(2, 4), 16), "iload");//index
+        INSTRUCTION_SET.put(Integer.parseInt("0x16".substring(2, 4), 16), "lload");//index
+        INSTRUCTION_SET.put(Integer.parseInt("0x17".substring(2, 4), 16), "fload");//index
+        INSTRUCTION_SET.put(Integer.parseInt("0x18".substring(2, 4), 16), "dload");//index
+        INSTRUCTION_SET.put(Integer.parseInt("0x19".substring(2, 4), 16), "aload");//index
         INSTRUCTION_SET.put(Integer.parseInt("0x1a".substring(2, 4), 16), "iload_0");
         INSTRUCTION_SET.put(Integer.parseInt("0x1b".substring(2, 4), 16), "iload_1");
         INSTRUCTION_SET.put(Integer.parseInt("0x1c".substring(2, 4), 16), "iload_2");
@@ -65,10 +131,10 @@ public class Instruction {
         INSTRUCTION_SET.put(Integer.parseInt("0x33".substring(2, 4), 16), "baload");
         INSTRUCTION_SET.put(Integer.parseInt("0x34".substring(2, 4), 16), "caload");
         INSTRUCTION_SET.put(Integer.parseInt("0x35".substring(2, 4), 16), "saload");
-        INSTRUCTION_SET.put(Integer.parseInt("0x36".substring(2, 4), 16), "istore");
-        INSTRUCTION_SET.put(Integer.parseInt("0x37".substring(2, 4), 16), "lstore");
-        INSTRUCTION_SET.put(Integer.parseInt("0x38".substring(2, 4), 16), "fstore");
-        INSTRUCTION_SET.put(Integer.parseInt("0x39".substring(2, 4), 16), "dstore");
+        INSTRUCTION_SET.put(Integer.parseInt("0x36".substring(2, 4), 16), "istore");//index
+        INSTRUCTION_SET.put(Integer.parseInt("0x37".substring(2, 4), 16), "lstore");//index
+        INSTRUCTION_SET.put(Integer.parseInt("0x38".substring(2, 4), 16), "fstore");//index
+        INSTRUCTION_SET.put(Integer.parseInt("0x39".substring(2, 4), 16), "dstore");//index
         INSTRUCTION_SET.put(Integer.parseInt("0x3a".substring(2, 4), 16), "astore");
         INSTRUCTION_SET.put(Integer.parseInt("0x3b".substring(2, 4), 16), "istore_0");
         INSTRUCTION_SET.put(Integer.parseInt("0x3c".substring(2, 4), 16), "istore_1");
@@ -94,7 +160,7 @@ public class Instruction {
         INSTRUCTION_SET.put(Integer.parseInt("0x50".substring(2, 4), 16), "lastore");
         INSTRUCTION_SET.put(Integer.parseInt("0x51".substring(2, 4), 16), "fastore");
         INSTRUCTION_SET.put(Integer.parseInt("0x52".substring(2, 4), 16), "dastore");
-        INSTRUCTION_SET.put(Integer.parseInt("0x53".substring(2, 4), 16), "aastore");
+        INSTRUCTION_SET.put(Integer.parseInt("0x53".substring(2, 4), 16), "aastore");//index
         INSTRUCTION_SET.put(Integer.parseInt("0x54".substring(2, 4), 16), "bastore");
         INSTRUCTION_SET.put(Integer.parseInt("0x55".substring(2, 4), 16), "castore");
         INSTRUCTION_SET.put(Integer.parseInt("0x56".substring(2, 4), 16), "sastore");
@@ -143,7 +209,7 @@ public class Instruction {
         INSTRUCTION_SET.put(Integer.parseInt("0x81".substring(2, 4), 16), "lor");
         INSTRUCTION_SET.put(Integer.parseInt("0x82".substring(2, 4), 16), "ixor");
         INSTRUCTION_SET.put(Integer.parseInt("0x83".substring(2, 4), 16), "lxor");
-        INSTRUCTION_SET.put(Integer.parseInt("0x84".substring(2, 4), 16), "iinc");
+        INSTRUCTION_SET.put(Integer.parseInt("0x84".substring(2, 4), 16), "iinc");//index const
         INSTRUCTION_SET.put(Integer.parseInt("0x85".substring(2, 4), 16), "i2l");
         INSTRUCTION_SET.put(Integer.parseInt("0x86".substring(2, 4), 16), "i2f");
         INSTRUCTION_SET.put(Integer.parseInt("0x87".substring(2, 4), 16), "i2d");
@@ -164,54 +230,54 @@ public class Instruction {
         INSTRUCTION_SET.put(Integer.parseInt("0x96".substring(2, 4), 16), "fcmpg");
         INSTRUCTION_SET.put(Integer.parseInt("0x97".substring(2, 4), 16), "dcmpl");
         INSTRUCTION_SET.put(Integer.parseInt("0x98".substring(2, 4), 16), "dcmpg");
-        INSTRUCTION_SET.put(Integer.parseInt("0x99".substring(2, 4), 16), "ifeq");
-        INSTRUCTION_SET.put(Integer.parseInt("0x9a".substring(2, 4), 16), "ifne");
-        INSTRUCTION_SET.put(Integer.parseInt("0x9b".substring(2, 4), 16), "iflt");
-        INSTRUCTION_SET.put(Integer.parseInt("0x9c".substring(2, 4), 16), "ifge");
-        INSTRUCTION_SET.put(Integer.parseInt("0x9d".substring(2, 4), 16), "ifgt");
-        INSTRUCTION_SET.put(Integer.parseInt("0x9e".substring(2, 4), 16), "ifle");
-        INSTRUCTION_SET.put(Integer.parseInt("0x9f".substring(2, 4), 16), "if_icmpeq");
-        INSTRUCTION_SET.put(Integer.parseInt("0xa0".substring(2, 4), 16), "if_icmpne");
-        INSTRUCTION_SET.put(Integer.parseInt("0xa1".substring(2, 4), 16), "if_icmplt");
-        INSTRUCTION_SET.put(Integer.parseInt("0xa2".substring(2, 4), 16), "if_icmpge");
-        INSTRUCTION_SET.put(Integer.parseInt("0xa3".substring(2, 4), 16), "if_icmpgt");
-        INSTRUCTION_SET.put(Integer.parseInt("0xa4".substring(2, 4), 16), "if_icmple");
-        INSTRUCTION_SET.put(Integer.parseInt("0xa5".substring(2, 4), 16), "if_acmpeq");
-        INSTRUCTION_SET.put(Integer.parseInt("0xa6".substring(2, 4), 16), "if_acmpne");
-        INSTRUCTION_SET.put(Integer.parseInt("0xa7".substring(2, 4), 16), "goto");
-        INSTRUCTION_SET.put(Integer.parseInt("0xa8".substring(2, 4), 16), "jsr");
-        INSTRUCTION_SET.put(Integer.parseInt("0xa9".substring(2, 4), 16), "ret");
-        INSTRUCTION_SET.put(Integer.parseInt("0xaa".substring(2, 4), 16), "tableswitch");
-        INSTRUCTION_SET.put(Integer.parseInt("0xab".substring(2, 4), 16), "lookupswitch");
+        INSTRUCTION_SET.put(Integer.parseInt("0x99".substring(2, 4), 16), "ifeq");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0x9a".substring(2, 4), 16), "ifne");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0x9b".substring(2, 4), 16), "iflt");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0x9c".substring(2, 4), 16), "ifge");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0x9d".substring(2, 4), 16), "ifgt");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0x9e".substring(2, 4), 16), "ifle");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0x9f".substring(2, 4), 16), "if_icmpeq");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0xa0".substring(2, 4), 16), "if_icmpne");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0xa1".substring(2, 4), 16), "if_icmplt");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0xa2".substring(2, 4), 16), "if_icmpge");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0xa3".substring(2, 4), 16), "if_icmpgt");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0xa4".substring(2, 4), 16), "if_icmple");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0xa5".substring(2, 4), 16), "if_acmpeq");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0xa6".substring(2, 4), 16), "if_acmpne");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0xa7".substring(2, 4), 16), "goto");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0xa8".substring(2, 4), 16), "jsr");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0xa9".substring(2, 4), 16), "ret");//index
+        INSTRUCTION_SET.put(Integer.parseInt("0xaa".substring(2, 4), 16), "tableswitch");//变长
+        INSTRUCTION_SET.put(Integer.parseInt("0xab".substring(2, 4), 16), "lookupswitch");//变长
         INSTRUCTION_SET.put(Integer.parseInt("0xac".substring(2, 4), 16), "ireturn");
         INSTRUCTION_SET.put(Integer.parseInt("0xad".substring(2, 4), 16), "lreturn");
         INSTRUCTION_SET.put(Integer.parseInt("0xae".substring(2, 4), 16), "freturn");
         INSTRUCTION_SET.put(Integer.parseInt("0xaf".substring(2, 4), 16), "dreturn");
         INSTRUCTION_SET.put(Integer.parseInt("0xb0".substring(2, 4), 16), "areturn");
         INSTRUCTION_SET.put(Integer.parseInt("0xb1".substring(2, 4), 16), "return");
-        INSTRUCTION_SET.put(Integer.parseInt("0xb2".substring(2, 4), 16), "getstatic");
-        INSTRUCTION_SET.put(Integer.parseInt("0xb3".substring(2, 4), 16), "putstatic");
-        INSTRUCTION_SET.put(Integer.parseInt("0xb4".substring(2, 4), 16), "getfield");
-        INSTRUCTION_SET.put(Integer.parseInt("0xb5".substring(2, 4), 16), "putfield");
-        INSTRUCTION_SET.put(Integer.parseInt("0xb6".substring(2, 4), 16), "invokevirtual");
-        INSTRUCTION_SET.put(Integer.parseInt("0xb7".substring(2, 4), 16), "invokespecial");
-        INSTRUCTION_SET.put(Integer.parseInt("0xb8".substring(2, 4), 16), "invokestatic");
-        INSTRUCTION_SET.put(Integer.parseInt("0xb9".substring(2, 4), 16), "invokeinterface");
-        INSTRUCTION_SET.put(Integer.parseInt("0xba".substring(2, 4), 16), "--");
-        INSTRUCTION_SET.put(Integer.parseInt("0xbb".substring(2, 4), 16), "new");
-        INSTRUCTION_SET.put(Integer.parseInt("0xbc".substring(2, 4), 16), "newarray");
-        INSTRUCTION_SET.put(Integer.parseInt("0xbd".substring(2, 4), 16), "anewarray");
+        INSTRUCTION_SET.put(Integer.parseInt("0xb2".substring(2, 4), 16), "getstatic");//indexi index2
+        INSTRUCTION_SET.put(Integer.parseInt("0xb3".substring(2, 4), 16), "putstatic");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0xb4".substring(2, 4), 16), "getfield");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0xb5".substring(2, 4), 16), "putfield");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0xb6".substring(2, 4), 16), "invokevirtual");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0xb7".substring(2, 4), 16), "invokespecial");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0xb8".substring(2, 4), 16), "invokestatic");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0xb9".substring(2, 4), 16), "invokeinterface");//index1 index2 count 0
+        INSTRUCTION_SET.put(Integer.parseInt("0xba".substring(2, 4), 16), "invokedynamic");//index1 index2 0 0
+        INSTRUCTION_SET.put(Integer.parseInt("0xbb".substring(2, 4), 16), "new");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0xbc".substring(2, 4), 16), "newarray");//atype(int)
+        INSTRUCTION_SET.put(Integer.parseInt("0xbd".substring(2, 4), 16), "anewarray");//index1 index2
         INSTRUCTION_SET.put(Integer.parseInt("0xbe".substring(2, 4), 16), "arraylength");
         INSTRUCTION_SET.put(Integer.parseInt("0xbf".substring(2, 4), 16), "athrow");
-        INSTRUCTION_SET.put(Integer.parseInt("0xc0".substring(2, 4), 16), "checkcast");
-        INSTRUCTION_SET.put(Integer.parseInt("0xc1".substring(2, 4), 16), "instanceof");
+        INSTRUCTION_SET.put(Integer.parseInt("0xc0".substring(2, 4), 16), "checkcast");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0xc1".substring(2, 4), 16), "instanceof");//index1 index2
         INSTRUCTION_SET.put(Integer.parseInt("0xc2".substring(2, 4), 16), "monitorenter");
         INSTRUCTION_SET.put(Integer.parseInt("0xc3".substring(2, 4), 16), "monitorexit");
-        INSTRUCTION_SET.put(Integer.parseInt("0xc4".substring(2, 4), 16), "wide");
-        INSTRUCTION_SET.put(Integer.parseInt("0xc5".substring(2, 4), 16), "multianewarray");
-        INSTRUCTION_SET.put(Integer.parseInt("0xc6".substring(2, 4), 16), "ifnull");
-        INSTRUCTION_SET.put(Integer.parseInt("0xc7".substring(2, 4), 16), "ifnonnull");
-        INSTRUCTION_SET.put(Integer.parseInt("0xc8".substring(2, 4), 16), "goto_w");
-        INSTRUCTION_SET.put(Integer.parseInt("0xc9".substring(2, 4), 16), "jsr_w");
+        INSTRUCTION_SET.put(Integer.parseInt("0xc4".substring(2, 4), 16), "wide");//如果接下来操作符为iinc i1 i2 i3 i4 否则index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0xc5".substring(2, 4), 16), "multianewarray");//b1 b2 dimension
+        INSTRUCTION_SET.put(Integer.parseInt("0xc6".substring(2, 4), 16), "ifnull");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0xc7".substring(2, 4), 16), "ifnonnull");//index1 index2
+        INSTRUCTION_SET.put(Integer.parseInt("0xc8".substring(2, 4), 16), "goto_w");//index1 index2 index3 index4
+        INSTRUCTION_SET.put(Integer.parseInt("0xc9".substring(2, 4), 16), "jsr_w");//index1 index2 index3 index4
     }
 }

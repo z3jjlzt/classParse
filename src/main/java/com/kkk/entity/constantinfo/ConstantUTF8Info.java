@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
  * ${DESCRIPTION}
  * Created by z3jjlzt on 2018/5/14.
  */
+@SuppressWarnings("ALL")
 @Data
 public class ConstantUTF8Info implements ReadInfo {
     private int length;
@@ -33,7 +34,7 @@ public class ConstantUTF8Info implements ReadInfo {
     }
 
     private String readUTF8(byte[] bytes) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int current = 0;
         int length = bytes.length;
         while (current < length) {
@@ -54,10 +55,8 @@ public class ConstantUTF8Info implements ReadInfo {
                 int i = (((bytes[current] & 0xf) << 12) + ((bytes[++current] & 0x3f) << 6) + (bytes[++current] & 0x3f));
                 sb.append(unicodeToString("\\u" + (Integer.toHexString(i))));
                 current++;
-                continue;
             }
         }
-        System.out.println(" =utf8    " + sb.toString());
         return sb.toString();
     }
     /**
@@ -67,24 +66,19 @@ public class ConstantUTF8Info implements ReadInfo {
      * @author yutao
      * @date 2017年1月24日上午10:33:25
      */
-    public static String unicodeToString(String str) {
-
+    private static String unicodeToString(String str) {
         Pattern pattern = Pattern.compile("(\\\\u(\\p{XDigit}{4}))");
-
         Matcher matcher = pattern.matcher(str);
-
         char ch;
-
         while (matcher.find()) {
-
             ch = (char) Integer.parseInt(matcher.group(2), 16);
-
             str = str.replace(matcher.group(1), ch+"" );
-
         }
-
         return str;
-
     }
 
+    @Override
+    public String toString() {
+        return "  =utf8  " + value;
+    }
 }

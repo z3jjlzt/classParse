@@ -10,7 +10,7 @@ import java.io.InputStream;
  * Created by z3jjlzt on 2018/5/15.
  */
 @Data
-public class ExceptionTableInfo {
+class ExceptionTableInfo {
     private int start_pc,end_pc,handler_pc,catch_type;
 
     public void read(InputStream inputStream) {

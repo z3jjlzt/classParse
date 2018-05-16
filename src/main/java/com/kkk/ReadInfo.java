@@ -7,5 +7,5 @@ import java.io.InputStream;
  * Created by z3jjlzt on 2018/5/15.
  */
 public interface ReadInfo {
-    public void read(InputStream inputStream);
+    void read(InputStream inputStream);
 }

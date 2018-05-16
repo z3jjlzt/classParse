@@ -6,7 +6,7 @@ import com.kkk.entity.U4;
 import java.io.InputStream;
 
 /**
- * ${DESCRIPTION}
+ * double类型常量
  * Created by z3jjlzt on 2018/5/14.
  */
 public class ConstantDoubleInfo implements ReadInfo {
@@ -17,6 +17,10 @@ public class ConstantDoubleInfo implements ReadInfo {
     public void read(InputStream ins) {
         high_bytes = U4.read(ins);
         low_bytes = U4.read(ins);
-        System.out.println(" =double    " + ((high_bytes << 32) + low_bytes));
+    }
+
+    @Override
+    public String toString() {
+        return "    =double    " + (high_bytes << 32 + low_bytes);
     }
 }

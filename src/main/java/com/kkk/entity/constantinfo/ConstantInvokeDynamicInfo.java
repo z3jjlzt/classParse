@@ -6,14 +6,14 @@ import com.kkk.entity.U2;
 import java.io.InputStream;
 
 /**
- * ${DESCRIPTION}
+ * 动态方法调用
  * Created by z3jjlzt on 2018/5/14.
  */
 public class ConstantInvokeDynamicInfo implements ReadInfo {
     /**
      * 指向一个utf8的索引.表示该类名称
      */
-    private int bootStrapMethodAttrIndex;
+    private int bootstrapmethodattrindex;
     /**
      * 名称和描述符
      */
@@ -21,8 +21,12 @@ public class ConstantInvokeDynamicInfo implements ReadInfo {
 
     @Override
     public void read(InputStream ins) {
-        bootStrapMethodAttrIndex = U2.read(ins);
+        bootstrapmethodattrindex = U2.read(ins);
         nameandtypeindex = U2.read(ins);
-        System.out.println(" =invokedynamic    #" + bootStrapMethodAttrIndex +",#" + nameandtypeindex);
+    }
+
+    @Override
+    public String toString() {
+        return "  =invokedynamic    #" + bootstrapmethodattrindex + ",#" + nameandtypeindex;
     }
 }

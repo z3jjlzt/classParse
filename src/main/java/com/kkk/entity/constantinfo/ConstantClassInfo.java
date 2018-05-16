@@ -7,7 +7,7 @@ import lombok.Data;
 import java.io.InputStream;
 
 /**
- * ${DESCRIPTION}
+ * 类类型
  * Created by z3jjlzt on 2018/5/14.
  */
 @Data
@@ -16,10 +16,15 @@ public class ConstantClassInfo implements ReadInfo {
      * 指向一个utf8的索引.表示该类名称
      */
     private int nameindex;
+    private String name;
 
     @Override
     public void read(InputStream ins) {
         nameindex = U2.read(ins);
-        System.out.println(" =class    #" + nameindex);
+    }
+
+    @Override
+    public String toString() {
+        return "  =class    #" + nameindex + " //" + name;
     }
 }
