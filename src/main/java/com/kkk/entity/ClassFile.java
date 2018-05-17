@@ -92,6 +92,7 @@ class ClassFile {
                         infos[j] = attrCodeInfo;
                         break;
                     default:
+                        infos[j] = attributeBaseInfo;
                         break;
                 }
             }
@@ -293,6 +294,7 @@ class ClassFile {
         try (InputStream ins = new FileInputStream("F:\\classParse\\src\\main\\AreaTeacherAssistanceServiceImpl.class")) {
             classFile.init(ins);
             printClassFile(classFile);
+//            System.out.println(classFile);
         }
     }
 
@@ -313,6 +315,42 @@ class ClassFile {
         for (int i = 1; i < constantinfos.length; i++) {
             System.out.println("    #" + i + " " + constantinfos[i]);
         }
-
+        //继承关系
+        System.out.println("access_flag = " + classFile.access_flags);
+        System.out.println("this_class = " + classFile.class2String(classFile.this_class));
+        System.out.println("super_class = " + classFile.class2String(classFile.super_class));
+        System.out.println("interfaces_count = " + classFile.interfaces_count);
+        for (int i = 0; i < classFile.interfaces_count; i++) {
+            System.out.println("#interface" + (i + 1) + " " + classFile.getInterfaceinfos()[i]);
+        }
+        //字段信息
+        System.out.println("field_count = " + classFile.getFields_count());
+        for (int i = 0; i < classFile.fields_count; i++) {
+            System.out.println("#field" + (i + 1) + " " + classFile.getFieldinfos()[i]);
+        }
+        //方法信息
+        System.out.println("method_count = " + classFile.methods_count);
+        for (int i = 0; i < classFile.methods_count; i++) {
+            MethodInfo methodInfo = ((MethodInfo) classFile.getMethodinfos()[i]);
+            System.out.println("#method" + (i + 1) + " " + methodInfo.getName() + methodInfo.getDescriptor());
+            AttributeBaseInfo[] attributeInfos = methodInfo.getAttributeInfos();
+            for (int j = 0; j < attributeInfos.length; j++) {
+                String attr_name = attributeInfos[j].getAttr_name();
+                switch (attr_name) {
+                    case "Code":
+                        AttrCodeInfo attributeInfo = (AttrCodeInfo) attributeInfos[j];
+                        System.out.println(attributeInfo);
+                        break;
+                        default:
+                            System.out.println(attributeInfos[j].getAttr_name());
+                            break;
+                }
+            }
+        }
+        //属性信息
+        System.out.println("attr_count = " + classFile.attrs_count);
+        for (int i = 0; i < classFile.attrs_count; i++) {
+            System.out.println("#attr" + (i + 1) + " " + ((AttributeBaseInfo) classFile.getAttrinfos()[i]).getAttr_name());
+        }
     }
 }
