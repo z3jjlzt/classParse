@@ -193,39 +193,6 @@ class ClassFile {
     }
 
     /**
-     * utf8表转string
-     *
-     * @param index 常量池对应的下标
-     * @return 对应的string值
-     */
-    private String Utf8ToString(int index) {
-        return ((ConstantUTF8Info) constantinfos[index]).getValue();
-    }
-
-    /**
-     * class表转string
-     *
-     * @param index 常量池对应的下标
-     * @return 对应的string值
-     */
-    private String ClassToString(int index) {
-        int nameindex = ((ConstantClassInfo) constantinfos[index]).getNameindex();
-        return utf8ToString(nameindex);
-    }
-
-    /**
-     * nameandtype表转string
-     *
-     * @param index 常量池对应的下标
-     * @return 对应的string值
-     */
-    private String NameAndTypeToString(int index) {
-        int descriptorindex = ((ConstantNameAndTypeInfo) constantinfos[index]).getDescriptorindex();
-        int nameindex = ((ConstantNameAndTypeInfo) constantinfos[index]).getNameindex();
-        return utf8ToString(descriptorindex) + utf8ToString(nameindex);
-    }
-
-    /**
      * 将t转换为结果R
      *
      * @param t        原始数据
@@ -334,6 +301,7 @@ class ClassFile {
             MethodInfo methodInfo = ((MethodInfo) classFile.getMethodinfos()[i]);
             System.out.println("#method" + (i + 1) + " " + methodInfo.getName() + methodInfo.getDescriptor());
             AttributeBaseInfo[] attributeInfos = methodInfo.getAttributeInfos();
+            //noinspection ForLoopReplaceableByForEach
             for (int j = 0; j < attributeInfos.length; j++) {
                 String attr_name = attributeInfos[j].getAttr_name();
                 switch (attr_name) {
