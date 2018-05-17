@@ -7,6 +7,7 @@ import com.kkk.entity.constantinfo.*;
 import com.kkk.entity.fieldinfo.FieldInfo;
 import com.kkk.entity.methodinfo.MethodInfo;
 import lombok.Data;
+import org.springframework.stereotype.Component;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.util.function.Function;
  * classfile文件格式
  */
 @Data
+@Component
 class ClassFile {
     private String magic;
     private int minor_version;
@@ -261,7 +263,6 @@ class ClassFile {
         try (InputStream ins = new FileInputStream("F:\\classParse\\src\\main\\App.class")) {
             classFile.init(ins);
             printClassFile(classFile);
-//            System.out.println(classFile);
         }
     }
 
