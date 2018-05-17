@@ -6,6 +6,7 @@ import com.kkk.entity.U1;
 import java.io.InputStream;
 
 /**
+ * 常量入口
  * Created by z3jjlzt on 2018/4/26.
  */
 public class Constant {
