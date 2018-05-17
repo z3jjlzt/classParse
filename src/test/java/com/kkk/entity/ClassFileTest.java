@@ -26,5 +26,6 @@ public class ClassFileTest {
         cf.init(ins);
         assertTrue(ins.available() == 0);
         assertTrue("cafebabe".equalsIgnoreCase(cf.getMagic()));
+        System.out.println("戈旭是sb");
     }
 }
