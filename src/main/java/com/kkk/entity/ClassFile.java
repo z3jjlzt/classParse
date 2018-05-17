@@ -291,7 +291,7 @@ class ClassFile {
 
     public static void main(String[] args) throws IOException {
         ClassFile classFile = new ClassFile();
-        try (InputStream ins = new FileInputStream("F:\\classParse\\src\\main\\AreaTeacherAssistanceServiceImpl.class")) {
+        try (InputStream ins = new FileInputStream("F:\\classParse\\src\\main\\App.class")) {
             classFile.init(ins);
             printClassFile(classFile);
 //            System.out.println(classFile);
